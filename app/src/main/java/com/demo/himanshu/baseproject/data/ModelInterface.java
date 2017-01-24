@@ -1,4 +1,4 @@
-package com.demo.himanshu.baseproject.model;
+package com.demo.himanshu.baseproject.data;
 
 import org.json.JSONObject;
 

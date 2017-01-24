@@ -1,7 +1,7 @@
-package com.demo.himanshu.baseproject.model;
+package com.demo.himanshu.baseproject.data;
 
-import com.demo.himanshu.baseproject.model.callback.Callback;
-import com.demo.himanshu.baseproject.model.callback.QueryCallback;
+import com.demo.himanshu.baseproject.data.callback.Callback;
+import com.demo.himanshu.baseproject.data.callback.QueryCallback;
 
 import org.json.JSONObject;
 

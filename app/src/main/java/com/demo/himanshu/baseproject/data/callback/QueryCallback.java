@@ -1,4 +1,4 @@
-package com.demo.himanshu.baseproject.model.callback;
+package com.demo.himanshu.baseproject.data.callback;
 
 import java.util.ArrayList;
 
