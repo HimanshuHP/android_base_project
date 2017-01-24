@@ -15,6 +15,24 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+        }
+        debug{
+
+        }
+    }
+
+    productFlavors {
+        local {
+            applicationIdSuffix ".local"
+            versionNameSuffix "-local"
+        }
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+        }
+        production {
+            applicationId "com.demo.himanshu.baseproject"
         }
     }
 }
