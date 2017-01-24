@@ -40,24 +40,26 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     }
 
     @Override
-    public void post(JSONObject obj, Callback callback) {
+    public void post(JSONObject obj, final Callback callback) {
         try {
             this.mCallback = callback;
             CustomJSONObjectRequest customJSONObjectRequest = new CustomJSONObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    GenericAsyncTask genericAsyncTask = new GenericAsyncTask(response);
+                    genericAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mCallback.onError(error);
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
             VolleyFactory.getInstance(mContext).addToRequestQueue(customJSONObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
+            sendError(e);
         }
 
     }
@@ -69,12 +71,13 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             CustomJSONObjectRequest customJSONObjectRequest = new CustomJSONObjectRequest(Request.Method.PUT, url, obj, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    GenericAsyncTask genericAsyncTask = new GenericAsyncTask(response);
+                    genericAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mCallback.onError(error);
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
@@ -82,6 +85,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
 
         } catch (Exception e) {
             e.printStackTrace();
+            sendError(e);
         }
 
     }
@@ -93,12 +97,13 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             CustomJSONObjectRequest customJSONObjectRequest = new CustomJSONObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    GenericAsyncTask genericAsyncTask = new GenericAsyncTask(response);
+                    genericAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mCallback.onError(error);
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
@@ -106,6 +111,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
 
         } catch (Exception e) {
             e.printStackTrace();
+            sendError(e);
         }
     }
 
@@ -116,18 +122,28 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             CustomStringRequest customStringRequest = new CustomStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-
+                    try {
+                        QueryAsyncTask queryAsyncTask = new QueryAsyncTask(new JSONArray(response));
+                        queryAsyncTask.execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mQueryCallback.onError(error);
                 }
             });
             customStringRequest.setHeaderValues(mHeaderValues);
             VolleyFactory.getInstance(mContext).addToRequestQueue(customStringRequest);
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                mQueryCallback.onError(new JSONObject().put("error", e.getMessage()));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -138,12 +154,13 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             CustomJSONObjectRequest customJSONObjectRequest = new CustomJSONObjectRequest(Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    GenericAsyncTask genericAsyncTask = new GenericAsyncTask(response);
+                    genericAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mCallback.onError(error);
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
@@ -151,6 +168,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
 
         } catch (Exception e) {
             e.printStackTrace();
+            sendError(e);
         }
     }
 
@@ -161,18 +179,28 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             CustomStringRequest customStringRequest = new CustomStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-
+                    try {
+                        QueryAsyncTask queryAsyncTask = new QueryAsyncTask(new JSONArray(response));
+                        queryAsyncTask.execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    mQueryCallback.onError(error);
                 }
             });
             customStringRequest.setHeaderValues(mHeaderValues);
             VolleyFactory.getInstance(mContext).addToRequestQueue(customStringRequest);
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                mQueryCallback.onError(new JSONObject().put("error", e.getMessage()));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -271,6 +299,16 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 mQueryCallback.onError(errorObj);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendError(Exception e) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("error", e.getMessage());
+            mCallback.onError(jsonObject);
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 }
