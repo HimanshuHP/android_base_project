@@ -1,11 +1,10 @@
 package com.demo.himanshu.baseproject.data.remote;
 
-import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
+import com.demo.himanshu.baseproject.BaseApplication;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -23,15 +22,13 @@ public class VolleyFactory {
 
     private static VolleyFactory sVolleyInstance;
     private RequestQueue mRequestQueue;
-    private static Context mCtx;
 
-    public static synchronized VolleyFactory getInstance(Context context) {
-        return sVolleyInstance = sVolleyInstance == null ? new VolleyFactory(context) : sVolleyInstance;
+    public static synchronized VolleyFactory getInstance() {
+        return sVolleyInstance = sVolleyInstance == null ? new VolleyFactory() : sVolleyInstance;
     }
 
-    public VolleyFactory(Context context) {
-        mCtx = context;
-        mRequestQueue = getRequestQueue();
+    public VolleyFactory() {
+        mRequestQueue = (mRequestQueue == null) ? Volley.newRequestQueue(BaseApplication.getAppContext(), getHurlStack()) : mRequestQueue;
     }
 
     protected HurlStack getHurlStack() {
@@ -54,11 +51,7 @@ public class VolleyFactory {
         };
     }
 
-    public RequestQueue getRequestQueue() {
-        return mRequestQueue = (mRequestQueue == null) ? Volley.newRequestQueue(mCtx.getApplicationContext(), getHurlStack()) : mRequestQueue;
-    }
-
     public <T> void addToRequestQueue(Request<T> request) {
-        getRequestQueue().add(request);
+        mRequestQueue.add(request);
     }
 }

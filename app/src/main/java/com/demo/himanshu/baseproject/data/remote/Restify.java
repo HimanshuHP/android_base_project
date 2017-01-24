@@ -1,6 +1,5 @@
 package com.demo.himanshu.baseproject.data.remote;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
@@ -30,10 +29,8 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     private QueryCallback mQueryCallback;
     private Class<T> classObj;
     private ArrayList<HeaderValue> mHeaderValues = null;
-    private Context mContext;
 
-    public Restify(Context context, String url, Class<T> classObj, ArrayList<HeaderValue> headerValues) {
-        this.mContext = context;
+    public Restify( String url, Class<T> classObj, ArrayList<HeaderValue> headerValues) {
         this.url = url;
         this.classObj = classObj;
         mHeaderValues = headerValues;
@@ -56,7 +53,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customJSONObjectRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
             sendError(e);
@@ -81,7 +78,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customJSONObjectRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONObjectRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,7 +104,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customJSONObjectRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONObjectRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +133,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customStringRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customStringRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customStringRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -164,7 +161,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customJSONObjectRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customJSONObjectRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONObjectRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -193,7 +190,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                 }
             });
             customStringRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance(mContext).addToRequestQueue(customStringRequest);
+            VolleyFactory.getInstance().addToRequestQueue(customStringRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {
