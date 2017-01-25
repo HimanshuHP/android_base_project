@@ -10,14 +10,16 @@ import com.demo.himanshu.baseproject.data.ModelInterface;
 import com.demo.himanshu.baseproject.data.callback.Callback;
 import com.demo.himanshu.baseproject.data.callback.QueryCallback;
 import com.demo.himanshu.baseproject.data.models.HeaderValue;
-import com.demo.himanshu.baseproject.data.remote.customRequest.CustomJSONArrayRequest;
 import com.demo.himanshu.baseproject.data.remote.customRequest.CustomJSONObjectRequest;
+import com.demo.himanshu.baseproject.data.remote.customRequest.GsonRequest;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by himanshu on 24/01/17.
@@ -93,11 +95,10 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void get(Callback callback) {
         try {
             this.mCallback = callback;
-            CustomJSONObjectRequest customJSONObjectRequest = new CustomJSONObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            GsonRequest<T> gsonRequest = new GsonRequest<>(url, classObj, new Response.Listener<T>() {
                 @Override
-                public void onResponse(JSONObject response) {
-                    GenericAsyncTask genericAsyncTask = new GenericAsyncTask(response);
-                    genericAsyncTask.execute();
+                public void onResponse(T response) {
+                    mCallback.onSuccess(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -105,8 +106,8 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                     mCallback.onError(error);
                 }
             });
-            customJSONObjectRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance().addToRequestQueue(customJSONObjectRequest);
+            gsonRequest.setHeaderValues(mHeaderValues);
+            VolleyFactory.getInstance().addToRequestQueue(gsonRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,20 +119,21 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void query(QueryCallback queryCallback) {
         try {
             this.mQueryCallback = queryCallback;
-            CustomJSONArrayRequest customJSONArrayRequest = new CustomJSONArrayRequest(url, new Response.Listener<JSONArray>() {
+            GsonRequest<ArrayList<T>> gsonRequest = new GsonRequest<>(url, new TypeToken<List<T>>() {
+            }.getType(), new Response.Listener<ArrayList<T>>() {
                 @Override
-                public void onResponse(JSONArray response) {
-                    QueryAsyncTask queryAsyncTask = new QueryAsyncTask(response);
-                    queryAsyncTask.execute();
+                public void onResponse(ArrayList<T> response) {
+                    mCallback.onSuccess(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mQueryCallback.onError(error);
+                    mCallback.onError(error);
                 }
             });
-            customJSONArrayRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance().addToRequestQueue(customJSONArrayRequest);
+
+            gsonRequest.setHeaderValues(mHeaderValues);
+            VolleyFactory.getInstance().addToRequestQueue(gsonRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -171,20 +173,21 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void fetchAll(QueryCallback queryCallback) {
         try {
             this.mQueryCallback = queryCallback;
-            CustomJSONArrayRequest customJSONArrayRequest = new CustomJSONArrayRequest(url, new Response.Listener<JSONArray>() {
+            GsonRequest<ArrayList<T>> gsonRequest = new GsonRequest<>(url, new TypeToken<List<T>>() {
+            }.getType(), new Response.Listener<ArrayList<T>>() {
                 @Override
-                public void onResponse(JSONArray response) {
-                    QueryAsyncTask queryAsyncTask = new QueryAsyncTask(response);
-                    queryAsyncTask.execute();
+                public void onResponse(ArrayList<T> response) {
+                    mCallback.onSuccess(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mQueryCallback.onError(error);
+                    mCallback.onError(error);
                 }
             });
-            customJSONArrayRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance().addToRequestQueue(customJSONArrayRequest);
+
+            gsonRequest.setHeaderValues(mHeaderValues);
+            VolleyFactory.getInstance().addToRequestQueue(gsonRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {

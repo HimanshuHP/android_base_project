@@ -37,6 +37,7 @@ public class VolleyFactory {
             protected HttpURLConnection createConnection(URL url) throws IOException {
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) super.createConnection(url);
                 try {
+                    //you can set ssl settings here
                     httpsURLConnection.setHostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
