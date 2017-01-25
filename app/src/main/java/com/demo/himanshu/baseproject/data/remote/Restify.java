@@ -10,6 +10,8 @@ import com.demo.himanshu.baseproject.data.ModelInterface;
 import com.demo.himanshu.baseproject.data.callback.Callback;
 import com.demo.himanshu.baseproject.data.callback.QueryCallback;
 import com.demo.himanshu.baseproject.data.models.HeaderValue;
+import com.demo.himanshu.baseproject.data.remote.customRequest.CustomJSONArrayRequest;
+import com.demo.himanshu.baseproject.data.remote.customRequest.CustomJSONObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +32,7 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     private Class<T> classObj;
     private ArrayList<HeaderValue> mHeaderValues = null;
 
-    public Restify( String url, Class<T> classObj, ArrayList<HeaderValue> headerValues) {
+    public Restify(String url, Class<T> classObj, ArrayList<HeaderValue> headerValues) {
         this.url = url;
         this.classObj = classObj;
         mHeaderValues = headerValues;
@@ -116,15 +118,11 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void query(QueryCallback queryCallback) {
         try {
             this.mQueryCallback = queryCallback;
-            CustomStringRequest customStringRequest = new CustomStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            CustomJSONArrayRequest customJSONArrayRequest = new CustomJSONArrayRequest(url, new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(String response) {
-                    try {
-                        QueryAsyncTask queryAsyncTask = new QueryAsyncTask(new JSONArray(response));
-                        queryAsyncTask.execute();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                public void onResponse(JSONArray response) {
+                    QueryAsyncTask queryAsyncTask = new QueryAsyncTask(response);
+                    queryAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -132,8 +130,8 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                     mQueryCallback.onError(error);
                 }
             });
-            customStringRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance().addToRequestQueue(customStringRequest);
+            customJSONArrayRequest.setHeaderValues(mHeaderValues);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONArrayRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -173,15 +171,11 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void fetchAll(QueryCallback queryCallback) {
         try {
             this.mQueryCallback = queryCallback;
-            CustomStringRequest customStringRequest = new CustomStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            CustomJSONArrayRequest customJSONArrayRequest = new CustomJSONArrayRequest(url, new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(String response) {
-                    try {
-                        QueryAsyncTask queryAsyncTask = new QueryAsyncTask(new JSONArray(response));
-                        queryAsyncTask.execute();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                public void onResponse(JSONArray response) {
+                    QueryAsyncTask queryAsyncTask = new QueryAsyncTask(response);
+                    queryAsyncTask.execute();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -189,8 +183,8 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
                     mQueryCallback.onError(error);
                 }
             });
-            customStringRequest.setHeaderValues(mHeaderValues);
-            VolleyFactory.getInstance().addToRequestQueue(customStringRequest);
+            customJSONArrayRequest.setHeaderValues(mHeaderValues);
+            VolleyFactory.getInstance().addToRequestQueue(customJSONArrayRequest);
         } catch (Exception e) {
             e.printStackTrace();
             try {

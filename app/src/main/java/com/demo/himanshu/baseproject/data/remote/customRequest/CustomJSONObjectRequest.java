@@ -1,9 +1,11 @@
-package com.demo.himanshu.baseproject.data.remote;
+package com.demo.himanshu.baseproject.data.remote.customRequest;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.demo.himanshu.baseproject.data.models.HeaderValue;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.Map;
  * Created by himanshu on 24/01/17.
  */
 
-public class CustomStringRequest extends StringRequest {
+public class CustomJSONObjectRequest extends JsonObjectRequest {
 
     private ArrayList<HeaderValue> mHeaderValues;
 
@@ -25,13 +27,12 @@ public class CustomStringRequest extends StringRequest {
         this.mHeaderValues = headerValues;
     }
 
-
-    public CustomStringRequest(int method, String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(method, url, listener, errorListener);
+    public CustomJSONObjectRequest(int method, String url, JSONObject jsonRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        super(method, url, jsonRequest, listener, errorListener);
     }
 
-    public CustomStringRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(url, listener, errorListener);
+    public CustomJSONObjectRequest(String url, JSONObject jsonRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        super(url, jsonRequest, listener, errorListener);
     }
 
     @Override
