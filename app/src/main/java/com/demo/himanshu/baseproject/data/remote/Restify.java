@@ -11,6 +11,7 @@ import com.demo.himanshu.baseproject.data.callback.Callback;
 import com.demo.himanshu.baseproject.data.callback.QueryCallback;
 import com.demo.himanshu.baseproject.data.models.HeaderValue;
 import com.demo.himanshu.baseproject.data.remote.customRequest.CustomJSONObjectRequest;
+import com.demo.himanshu.baseproject.data.remote.customRequest.GsonArrayRequest;
 import com.demo.himanshu.baseproject.data.remote.customRequest.GsonRequest;
 import com.google.gson.reflect.TypeToken;
 
@@ -119,19 +120,17 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
     public void query(QueryCallback queryCallback) {
         try {
             this.mQueryCallback = queryCallback;
-            GsonRequest<ArrayList<T>> gsonRequest = new GsonRequest<>(url, new TypeToken<List<T>>() {
-            }.getType(), new Response.Listener<ArrayList<T>>() {
+            GsonArrayRequest<ArrayList<T>> gsonRequest=new GsonArrayRequest<ArrayList<T>>(url, classObj, new Response.Listener<ArrayList<T>>() {
                 @Override
                 public void onResponse(ArrayList<T> response) {
-                    mCallback.onSuccess(response);
+                    mQueryCallback.onSuccess(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mCallback.onError(error);
+                    mQueryCallback.onError(error);
                 }
             });
-
             gsonRequest.setHeaderValues(mHeaderValues);
             VolleyFactory.getInstance().addToRequestQueue(gsonRequest);
         } catch (Exception e) {
@@ -177,12 +176,12 @@ public class Restify<T extends ModelInterface> implements DataAccessInterface {
             }.getType(), new Response.Listener<ArrayList<T>>() {
                 @Override
                 public void onResponse(ArrayList<T> response) {
-                    mCallback.onSuccess(response);
+                    mQueryCallback.onSuccess(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mCallback.onError(error);
+                    mQueryCallback.onError(error);
                 }
             });
 
